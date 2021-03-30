@@ -53,7 +53,7 @@ void init(Folder *folder, const char* filename)
 
 void find_file(Folder *folder)
 {   
-    char directory[512];
+    char* directory = malloc(strlen(folder->curr_dir) + 1);
     strcpy(directory, folder->curr_dir);
 
     DIR *dir;
@@ -67,9 +67,14 @@ void find_file(Folder *folder)
     {   
         // Search in every sub-folder
         while((ent = readdir(dir)) != NULL)
-        {   
-            /* 
-                If the directory points to the same o the prev
+        {  
+	    // dev/fd folder not needed for the file searching	
+            #ifdef __linux__
+	        if(strstr(ent->d_name, "fd") != NULL || strstr(ent->d_name, "proc") != NULL)
+		    continue;	
+	    #endif
+	    /* 
+            If the directory points to the same o the prev
             directory the function retrun NULL
             */
             if(ent->d_name[strlen(ent->d_name) - 1] == '.' || ent->d_name[0] == '$')
