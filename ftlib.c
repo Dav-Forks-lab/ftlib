@@ -150,6 +150,12 @@ void apply_filter(Folder *folder, char* filtered_result[], int* index)
     }
 }
 
+void change_filename(Folder* folder, char* new_filename)
+{
+    folder->filename = realloc(folder->filename, strlen(new_filename) + 1);
+    strcpy(folder->filename, new_filename);
+}
+
 // Print the result array
 int print(Folder* folder)
 {   
