@@ -68,7 +68,7 @@ void find_file(Folder *folder)
         // Search in every sub-folder
         while((ent = readdir(dir)) != NULL)
         {  
-	    // dev/fd folder not needed for the file searching	
+	        // dev/fd folder not needed for the file searching	
             #ifdef __linux__
 	        if(strstr(ent->d_name, "fd") != NULL || strstr(ent->d_name, "proc") != NULL)
 		    continue;	
