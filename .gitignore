@@ -4,3 +4,9 @@
 *.so
 
 /test
+
+# CMAKE build folder
+cmake-build-debug
+
+# IDEA Project folder
+.idea
