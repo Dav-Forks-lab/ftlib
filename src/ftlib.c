@@ -8,8 +8,6 @@
 Include libraries
 #################
 */
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
 
@@ -34,11 +32,23 @@ typedef struct {
     char *filename;
     char *root_dir;
     char *curr_dir;
+    char **win_disks;
     char **result;
     char *separator;
     char *filters[FILTER_LIMIT];
-    long int result_lenght, filter_lenght, result_size;
+    long int result_lenght, filter_lenght, result_size, win_disks_lenght;
 } Folder;  
+
+/*
+#################
+Windows disk
+#################
+
+* Include a file for windows disk listing
+*/
+#ifdef _WIN32
+    #include "win_functions.c"
+#endif  
 
 /*
 #################
@@ -54,8 +64,7 @@ void init(Folder *folder, const char* filename)
     folder->result_lenght = 0;
     folder->filter_lenght = 0;
 
-    memset(folder->filters, 0, sizeof(folder->filters));
-
+    folder->filters = malloc(sizeof(folder->filters) * sizeof(char *));
     folder->result = malloc(folder->result_size * sizeof(char *));
     folder->filename = malloc(strlen(filename) + 1);
 
@@ -65,7 +74,10 @@ void init(Folder *folder, const char* filename)
         strcpy(folder->root_dir, "C:\\");
         folder->separator = malloc(strlen("\\") + 1);
         strcpy(folder->separator, "\\");
-    #elif __linux__ || __APPLE__
+
+        folder->win_disks = malloc(sizeof(char*) * 32)
+        folder->win_disks_lenght = 0;
+    #elif __linux__
         folder->root_dir = malloc(strlen("/") + 1);
         strcpy(folder->root_dir, "/");
         folder->separator = malloc(strlen("/") + 1);
