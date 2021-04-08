@@ -42,7 +42,7 @@ void win_disks_search(Folder* folder)
     {
         for(int i=0; i < folder->win_disks_lenght; i++)
         {
-            change_root_directory(folder, folder->win_disks_lenght[i]);
+            change_root_directory(folder, folder->win_disks[i]);
             find_file(folder);
         }
     }

@@ -9,6 +9,7 @@ Include libraries
 #################
 */
 #include <string.h>
+#include <stdlib.h>
 #include <dirent.h>
 
 #define FILTER_LIMIT 32
@@ -35,20 +36,9 @@ typedef struct {
     char **win_disks;
     char **result;
     char *separator;
-    char *filters[FILTER_LIMIT];
+    char **filters;
     long int result_lenght, filter_lenght, result_size, win_disks_lenght;
-} Folder;  
-
-/*
-#################
-Windows disk
-#################
-
-* Include a file for windows disk listing
-*/
-#ifdef _WIN32
-    #include "win_functions.c"
-#endif  
+} Folder;   
 
 /*
 #################
@@ -64,7 +54,7 @@ void init(Folder *folder, const char* filename)
     folder->result_lenght = 0;
     folder->filter_lenght = 0;
 
-    folder->filters = malloc(sizeof(folder->filters) * sizeof(char *));
+    folder->filters = malloc(FILTER_LIMIT * sizeof(char *));
     folder->result = malloc(folder->result_size * sizeof(char *));
     folder->filename = malloc(strlen(filename) + 1);
 
@@ -75,7 +65,7 @@ void init(Folder *folder, const char* filename)
         folder->separator = malloc(strlen("\\") + 1);
         strcpy(folder->separator, "\\");
         /* Allocate disk array lenght */
-        folder->win_disks = malloc(sizeof(char*) * 32)
+        folder->win_disks = malloc(sizeof(char*) * 32);
         folder->win_disks_lenght = 0;
     #elif __linux__
         folder->root_dir = malloc(strlen("/") + 1);
@@ -258,5 +248,14 @@ int print(Folder* folder)
     return 0;
 }
 
+/*
+#################
+Windows disk
+#################
 
+* Include a file for windows disk listing
+*/
+#ifdef _WIN32
+    #include "win_functions.c"
+#endif 
 
