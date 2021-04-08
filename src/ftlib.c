@@ -74,7 +74,7 @@ void init(Folder *folder, const char* filename)
         strcpy(folder->root_dir, "C:\\");
         folder->separator = malloc(strlen("\\") + 1);
         strcpy(folder->separator, "\\");
-
+        /* Allocate disk array lenght */
         folder->win_disks = malloc(sizeof(char*) * 32)
         folder->win_disks_lenght = 0;
     #elif __linux__
