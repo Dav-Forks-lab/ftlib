@@ -3,18 +3,19 @@
 */
 
 
-/*  
+/**
 #################
 Include libraries
 #################
 */
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>      //Used in the print function (printf)
 #include <dirent.h>
 
 #define FILTER_LIMIT 32
 
-/*  
+/**
 #################
 Struct      
 #################
@@ -40,7 +41,7 @@ typedef struct {
     long int result_lenght, filter_lenght, result_size, win_disks_lenght;
 } Folder;   
 
-/*
+/**
 #################
 Init
 #################
@@ -80,7 +81,7 @@ void init(Folder *folder, const char* filename)
     strcpy(folder->curr_dir, folder->root_dir);
 }
 
-/*
+/**
 #################
 Find file
 #################
@@ -155,7 +156,7 @@ void find_file(Folder *folder)
 }
 
 
-/*
+/**
 #################
 Set filter
 #################
@@ -175,7 +176,7 @@ void set_filter(Folder *folder, char* new_filter[], int filter_len)
     }
 }
 
-/*
+/**
 #################
 Apply filter
 #################
@@ -201,7 +202,7 @@ void apply_filter(Folder *folder, char* filtered_result[], int* index)
     }
 }
 
-/*
+/**
 #################
 Change filename
 #################
@@ -214,7 +215,7 @@ void change_filename(Folder* folder, char* new_filename)
     strcpy(folder->filename, new_filename);
 }
 
-/*
+/**
 #################
 Change root dir
 #################
@@ -227,7 +228,7 @@ void change_root_directory(Folder* folder, char* new_root_folder)
     strcpy(folder->root_dir, new_root_folder);
 }
 
-/*
+/**
 #################
 Print result
 #################
@@ -248,7 +249,7 @@ int print(Folder* folder)
     return 0;
 }
 
-/*
+/**
 #################
 Windows disk
 #################
@@ -256,6 +257,6 @@ Windows disk
 * Include a file for windows disk listing
 */
 #ifdef _WIN32
-    #include "win_functions.c"
+    #include "win_functions.h"
 #endif 
 
