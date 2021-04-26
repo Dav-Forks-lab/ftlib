@@ -68,11 +68,13 @@ void init(Folder *folder, const char* filename)
         /* Allocate disk array lenght */
         folder->win_disks = malloc(sizeof(char*) * 32);
         folder->win_disks_lenght = 0;
+
     #elif __linux__
         folder->root_dir = malloc(strlen("/") + 1);
         strcpy(folder->root_dir, "/");
         folder->separator = malloc(strlen("/") + 1);
         strcpy(folder->separator, "/");
+
     #endif       
 
     folder->curr_dir = malloc(strlen(folder->root_dir) + 1);
@@ -107,9 +109,9 @@ void find_file(Folder *folder)
         {  
 	        /* dev/fd folder not needed for the file searching */	
             #ifdef __linux__
-	        if(strstr(ent->d_name, "fd") != NULL || strstr(ent->d_name, "proc") != NULL)
-		    continue;	
-	    #endif
+	            if(strstr(ent->d_name, "fd") != NULL || strstr(ent->d_name, "proc") != NULL)
+		            continue;	
+	        #endif
 	        /* 
             If the directory points to the same o the prev
             directory the function retrun NULL
@@ -151,6 +153,7 @@ void find_file(Folder *folder)
     }
     
     /* Clear pointer data */
+    closedir(dir);
     free(dir);
     free(ent);
 }
