@@ -230,7 +230,7 @@ void change_root_directory(Folder* folder, char* new_root_folder)
         folder->root_dir = realloc(folder->root_dir, strlen(new_root_folder) +1);
         strcpy(folder->root_dir, new_root_folder);
         folder->curr_dir = realloc(folder->curr_dir, strlen(new_root_folder) +1);
-        strcpy(folder->curr_dir, folder->root_dir);
+        strcpy(folder->curr_dir, new_root_folder);
 }
 
 /**
