@@ -13,6 +13,10 @@ Include libraries
 #include <stdio.h>      //Used in the print function (printf)
 #include <dirent.h>
 
+#ifdef  _WIN32
+        #include <windows.h>
+#endif
+
 #define FILTER_LIMIT 32
 
 /**
@@ -39,6 +43,7 @@ typedef struct {
         char *separator;
         char **filters;
         long int result_lenght, filter_lenght, result_size, win_disks_lenght;
+        int linux_multi_disk_search;
 } Folder;   
 
 /**
@@ -50,7 +55,59 @@ Init
 */
 void init(Folder *folder, const char* filename) 
 {      
-        /* Init sizes */
+        /*
+        * If OS is Windows an array is filled with all of the usable drives
+        * The find_file function doesn't search in all of those automatically
+        * The choose is given to the developer
+        * Searching in all of the disks can be easly done by loop through the array
+        * and use the change_root_directory with find_file function
+        * The default disk is set to "C:\"
+        */
+        #ifdef _WIN32
+
+                char driver_array[MAX_PATH] = {0};
+                DWORD dword_size = MAX_PATH;
+                DWORD dword_result = GetLogicalDriveStrings(dword_size, driver_array);
+
+                /* Allocate multiple disk array size */
+                folder->win_disks = malloc(sizeof(char*) * 32);
+                folder->win_disks_lenght = 0;
+
+                if (dword_result > 0 && dword_result <= MAX_PATH)
+                {
+                        char* drive = driver_array;
+                        while(*drive)
+                        {       
+                                folder->win_disks[folder->win_disks_lenght] = malloc(strlen(drive) + 1);
+                                strcpy(folder->win_disks[folder->win_disks_lenght], drive);
+
+                                // Point to the next drive
+                                drive += strlen(drive) + 1;
+                                folder->win_disks_lenght++;
+                        }
+                }
+
+                /* Setting the defualt disk and the default separator */
+                folder->root_dir = malloc(strlen("C:\\") + 1);
+                strcpy(folder->root_dir, "C:\\");
+                folder->separator = malloc(strlen("\\") + 1);
+                strcpy(folder->separator, "\\");
+
+        /*
+        * Linux based OS just need "/" as base folder
+        * Other mouted disks are reachable from there
+        */
+        #elif __linux__
+                folder->root_dir = malloc(strlen("/") + 1);
+                strcpy(folder->root_dir, "/");
+                folder->separator = malloc(strlen("/") + 1);
+                strcpy(folder->separator, "/");
+                /* By deault it avoid /dev folder, it search only in the main disk */
+                folder->linux_multi_disk_search = 0;
+
+        #endif       
+
+         /* Init sizes */
         folder->result_size = 1024;
         folder->result_lenght = 0;
         folder->filter_lenght = 0;
@@ -58,25 +115,6 @@ void init(Folder *folder, const char* filename)
         folder->filters = malloc(FILTER_LIMIT * sizeof(char *));
         folder->result = malloc(folder->result_size * sizeof(char *));
         folder->filename = malloc(strlen(filename) + 1);
-
-        /* Initialize directory based on the OS */
-        #ifdef _WIN32
-                folder->root_dir = malloc(strlen("C:\\") + 1);
-                strcpy(folder->root_dir, "C:\\");
-                folder->separator = malloc(strlen("\\") + 1);
-                strcpy(folder->separator, "\\");
-                /* Allocate disk array lenght */
-                folder->win_disks = malloc(sizeof(char*) * 32);
-                folder->win_disks_lenght = 0;
-
-        #elif __linux__
-                folder->root_dir = malloc(strlen("/") + 1);
-                strcpy(folder->root_dir, "/");
-                folder->separator = malloc(strlen("/") + 1);
-                strcpy(folder->separator, "/");
-
-        #endif       
-
         folder->curr_dir = malloc(strlen(folder->root_dir) + 1);
 
         strcpy(folder->filename, filename);    
@@ -94,7 +132,7 @@ void find_file(Folder *folder)
 {   
         char* directory = malloc(strlen(folder->curr_dir) + 1);
         strcpy(directory, folder->curr_dir);
-        
+
         DIR *dir;
         struct dirent *ent;
 
@@ -107,17 +145,17 @@ void find_file(Folder *folder)
                 /* Search in every sub-folder */
                 while((ent = readdir(dir)) != NULL)
                 {  
-                        /* dev/fd folder not needed for the file searching */	
                         #ifdef __linux__
-                        if(strstr(ent->d_name, "fd") != NULL || strstr(ent->d_name, "proc") != NULL)
-                                continue;	
+                                /* dev/fd folder not needed for the file searching */	
+                                if(strstr(ent->d_name, "fd") != NULL || strstr(ent->d_name, "proc") != NULL)
+                                        continue;	
+                                /* If multi_disk_search is disable it avoids to search in other disks */
+                                if(folder->linux_multi_disk_search && strstr(ent->dname, "/dev") != NULL)
+                                        continue;
+                        #elif   _WIN32
+                                if(strchr(ent->d_name, '$') != NULL)
+                                        continue;
                         #endif
-                        /* 
-                        If the directory points to the same o the prev
-                        directory the function retrun NULL
-                        */
-                        if(ent->d_name[strlen(ent->d_name) - 1] == '.' || ent->d_name[0] == '$')
-                                continue;
 
                         if(folder->result_lenght == folder->result_size)
                         {   
@@ -153,7 +191,6 @@ void find_file(Folder *folder)
         }
         
         /* Clear pointer data */
-        closedir(dir);
         free(dir);
         free(ent);
 }
@@ -176,6 +213,8 @@ void set_filter(Folder *folder, char* new_filter[], int filter_len)
                         strcpy(folder->filters[i], new_filter[i]);
                         folder->filter_lenght++;
                 }
+                else
+                        break;
         }
 }
 
@@ -228,8 +267,9 @@ Change root dir
 void change_root_directory(Folder* folder, char* new_root_folder)
 {
         folder->root_dir = realloc(folder->root_dir, strlen(new_root_folder) +1);
-        strcpy(folder->root_dir, new_root_folder);
         folder->curr_dir = realloc(folder->curr_dir, strlen(new_root_folder) +1);
+
+        strcpy(folder->root_dir, new_root_folder);
         strcpy(folder->curr_dir, new_root_folder);
 }
 
@@ -253,15 +293,3 @@ int print(Folder* folder)
 
         return 0;
 }
-
-/**
-#################
-Windows disk
-#################
-
-* Include a file for windows disk listing
-*/
-#ifdef _WIN32
-        #include "win_functions.h"
-#endif 
-
