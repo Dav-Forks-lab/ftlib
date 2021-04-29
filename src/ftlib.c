@@ -129,7 +129,7 @@ Find file
 * Recursive search through file directories 
 */
 void find_file(Folder *folder)
-{   
+{       
         char* directory = malloc(strlen(folder->curr_dir) + 1);
         strcpy(directory, folder->curr_dir);
 
@@ -137,24 +137,26 @@ void find_file(Folder *folder)
         struct dirent *ent;
 
         if(strchr(directory, '.') != NULL)
-                return;
+                return; 
 
         /* Try to open the directory */
         if((dir = opendir(directory)) != NULL)
-        {   
+        {     
                 /* Search in every sub-folder */
                 while((ent = readdir(dir)) != NULL)
-                {  
+                {       
                         #ifdef __linux__
                                 /* dev/fd folder not needed for the file searching */	
-                                if(strstr(ent->d_name, "fd") != NULL || strstr(ent->d_name, "proc") != NULL)
+                                if(strstr(ent->d_name, "fd") != NULL || strstr(ent->d_name, "proc") != NULL || strstr(ent->d_name, "dev") != NULL || strstr(ent->d_name, "tmp") != NULL)
                                         continue;	
                                 /* If multi_disk_search is disable it avoids to search in other disks */
-                                if(folder->linux_multi_disk_search && strstr(ent->dname, "/dev") != NULL)
+                                if(!folder->linux_multi_disk_search && strstr(ent->d_name, "mnt") != NULL)
                                         continue;
+
                         #elif   _WIN32
                                 if(strchr(ent->d_name, '$') != NULL)
                                         continue;
+                                        
                         #endif
 
                         if(folder->result_lenght == folder->result_size)
@@ -170,7 +172,7 @@ void find_file(Folder *folder)
                         }
 
                         if(strstr(ent->d_name, folder->filename) != NULL)
-                        {  
+                        {       
                                 /* Set the necessary space for the dir */
                                 folder->result[folder->result_lenght] = malloc(strlen(directory) + strlen(ent->d_name) +1);
                                 /* Assemble the dir string */
@@ -185,14 +187,12 @@ void find_file(Folder *folder)
                         strcpy(folder->curr_dir, directory);
                         strcat(folder->curr_dir, ent->d_name);
                         strcat(folder->curr_dir, folder->separator);
+   
                         /* Start the search again with recursion */
                         find_file(folder);
                 }
+                closedir(dir);
         }
-        
-        /* Clear pointer data */
-        free(dir);
-        free(ent);
 }
 
 
