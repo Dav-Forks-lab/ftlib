@@ -22,13 +22,19 @@ int main()
     // Search the filename
     find_file(f_obj);  
     
-    // Apply filters to search results
+    // Insert filters in an array
     set_filter(f_obj, filter_array, filter_array_lenght);  
     
-    // Fill the array with filtered result
-    apply_filter(f_obj, filtered_result_array, filtered_result_index);
+    // Fill a given array with filtered result
+    apply_filter(f_obj, filtered_result_array, filtered_result_array_index);
     
-    // Print result array (just for devs)
+    // Change the filename to be searched
+    change_filename(f_obj, new_filename);
+
+    // Set a new root direcotry
+    change_root_direcotory(f_obj, new_root_directory);
+
+    // Print result array (made for devs)
     print(f_obj);
 }
 ```
