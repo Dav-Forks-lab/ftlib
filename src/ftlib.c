@@ -36,6 +36,7 @@ Struct
 */
 typedef struct {
         char *filename;
+        char *initial_root_dir;
         char *root_dir;
         char *curr_dir;
         char **win_disks;
@@ -88,6 +89,8 @@ void init(Folder *folder, const char* filename)
                 }
 
                 /* Setting the defualt disk and the default separator */
+                folder->initial_root_dir = malloc(strlen("C:\\") + 1);
+                strcpy(folder->initial_root_dir, "C:\\");
                 folder->root_dir = malloc(strlen("C:\\") + 1);
                 strcpy(folder->root_dir, "C:\\");
                 folder->separator = malloc(strlen("\\") + 1);
@@ -98,6 +101,8 @@ void init(Folder *folder, const char* filename)
         * Other mouted disks are reachable from there
         */
         #elif __linux__
+                folder->initial_root_dir = malloc(strlen("C:\\") + 1);
+                strcpy(folder->initial_root_dir, "C:\\");
                 folder->root_dir = malloc(strlen("/") + 1);
                 strcpy(folder->root_dir, "/");
                 folder->separator = malloc(strlen("/") + 1);
@@ -276,6 +281,15 @@ void change_root_directory(Folder* folder, char* new_root_folder)
 
         strcpy(folder->root_dir, new_root_folder);
         strcpy(folder->curr_dir, new_root_folder);
+}
+
+void resert_directory(Folder* folder)
+{
+        folder->root_dir = realloc(folder->root_dir, strlen(folder->initial_root_dir) +1);
+        folder->curr_dir = realloc(folder->curr_dir, strlen(folder->initial_root_dir) +1);
+
+        strcpy(folder->root_dir, folder->initial_root_dir);
+        strcpy(folder->curr_dir, folder->initial_root_dir);
 }
 
 /**
