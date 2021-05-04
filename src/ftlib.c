@@ -147,8 +147,13 @@ void find_file(Folder *folder)
                 {       
                         #ifdef __linux__
                                 /* dev/fd folder not needed for the file searching */	
-                                if(strstr(ent->d_name, "fd") != NULL || strstr(ent->d_name, "proc") != NULL || strstr(ent->d_name, "dev") != NULL || strstr(ent->d_name, "tmp") != NULL)
+                                if(strstr(ent->d_name, "fd")   != NULL ||
+                                   strstr(ent->d_name, "proc") != NULL ||
+                                   strstr(ent->d_name, "dev")  != NULL || 
+                                   strstr(ent->d_name, "tmp")  != NULL
+                                   )
                                         continue;	
+                                
                                 /* If multi_disk_search is disable it avoids to search in other disks */
                                 if(!folder->linux_multi_disk_search && strstr(ent->d_name, "mnt") != NULL)
                                         continue;
@@ -279,6 +284,7 @@ Print result
 #################
 
 * Loop through the result array and prints the results
+* Made for dev
 */
 int print(Folder* folder)
 {   
@@ -286,7 +292,7 @@ int print(Folder* folder)
         if(folder->result[0])
                 /* Print array data */
                 for(int i=0; i < folder->result_lenght; i++)
-                printf("%s\n", folder->result[i]);
+                        printf("%s\n", folder->result[i]);
         else 
                 /* If the array is empty return an error code */
                 return 1;
