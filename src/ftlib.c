@@ -98,8 +98,6 @@ void init(Folder *folder, const char* filename)
         * Other mouted disks are reachable from there
         */
         #elif __linux__
-                folder->initial_root_dir = malloc(strlen("C:\\") + 1);
-                strcpy(folder->initial_root_dir, "C:\\");
                 folder->root_dir = malloc(strlen("/") + 1);
                 strcpy(folder->root_dir, "/");
                 folder->separator = malloc(strlen("/") + 1);
@@ -149,10 +147,11 @@ void find_file(Folder *folder)
                 {       
                         #ifdef __linux__
                                 /* dev/fd folder not needed for the file searching */	
-                                if(strstr(ent->d_name, "fd")   != NULL ||
-                                   strstr(ent->d_name, "proc") != NULL ||
-                                   strstr(ent->d_name, "dev")  != NULL || 
-                                   strstr(ent->d_name, "tmp")  != NULL
+                                if(strcmp(ent->d_name, "fd")   == 0 ||
+                                   strcmp(ent->d_name, "proc") == 0 ||
+                                   strcmp(ent->d_name, "dev")  == 0 || 
+                                   strcmp(ent->d_name, "tmp")  == 0 ||
+                                   strcmp(ent->d_name, "sys")  == 0   
                                    )
                                         continue;	
                                 
@@ -212,16 +211,14 @@ Set filter
 */
 void set_filter(Folder *folder, char* new_filter[], int filter_len)
 {   
+        if(filter_len > FILTER_LIMIT)
+                filter_len = FILTER_LIMIT;
+        
         for(int i = 0; i < filter_len; i++)
-        {   
-                if(i < FILTER_LIMIT)
-                {   
-                        folder->filters[i] = malloc(strlen(new_filter[i]) + 1);
-                        strcpy(folder->filters[i], new_filter[i]);
-                        folder->filter_lenght++;
-                }
-                else
-                        break;
+        {       
+                folder->filters[i] = malloc(strlen(new_filter[i]) + 1);
+                strcpy(folder->filters[i], new_filter[i]);
+                folder->filter_lenght++;
         }
 }
 
