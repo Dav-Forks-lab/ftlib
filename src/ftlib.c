@@ -42,7 +42,7 @@ typedef struct {
         char **result;
         char *separator;
         char **filters;
-        long int result_length, filter_length, result_size, win_disks_length;
+        long int result_length, filter_length, result_index, result_size, win_disks_length;
         int linux_multi_disk_search;
 } Folder;   
 
@@ -111,12 +111,13 @@ void init(Folder *folder, const char* filename)
         folder->result_size = 1024;
         folder->result_length = 0;
         folder->filter_length = 0;
+        folder->result_index = 0;
 
         folder->filters = malloc(FILTER_LIMIT * sizeof(char *));
         folder->result = malloc(folder->result_size * sizeof(char *));
         folder->filename = malloc(strlen(filename) + 1);
         folder->curr_dir = malloc(strlen(folder->root_dir) + 1);
-
+        
         strcpy(folder->filename, filename);    
         strcpy(folder->curr_dir, folder->root_dir);
 }
@@ -214,10 +215,10 @@ Set filter
 int add_filter(Folder *folder, char* new_filter)
 {   
         if(folder->filter_length >= FILTER_LIMIT)
-                retrun EXIT_FAILURE;
+                return EXIT_FAILURE;
         
         folder->filters[folder->filter_length] = malloc(strlen(new_filter) + 1);
-        strcpy(folder->filters[i], new_filter);
+        strcpy(folder->filters[folder->filter_length], new_filter);
         folder->filter_length++;
 
         return EXIT_SUCCESS;
@@ -230,23 +231,26 @@ Apply filter
 
 * Fill a given pointer array with filter matching results
 */
-int apply_filter(Folder *folder, char* filtered_result[], int index)
+int apply_filter(Folder *folder, char* filtered_result[], int flt_result_index)
 {   
-        for(int i=0; i < folder->result_length; i++)
+        for(int i=folder->result_index; i < folder->result_length; i++)
         {   
                 for(int j=0; j < folder->filter_length; j++)
                 {
                         /* Check if the result contains the filter */
                         if(strstr(folder->result[i], folder->filters[j]) != NULL)
                         {   
-                                filtered_result[index] = malloc(strlen(folder->result[i]) +1);
-                                strcpy(filtered_result[index], folder->result[i]);
+                                filtered_result[flt_result_index] = malloc(strlen(folder->result[i]) +1);
+                                strcpy(filtered_result[flt_result_index], folder->result[i]);
                                 
-                                index++;
+                                flt_result_index++;
                                 break;
                         }
                 }
         }
+        folder->result_index = folder->result_length;
+
+        return flt_result_index;
 }
 
 /**
