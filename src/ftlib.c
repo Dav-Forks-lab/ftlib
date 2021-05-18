@@ -30,9 +30,9 @@ Struct
 * result         :  array of strings containing the results
 * separator      :  OS's slash
 * filters        :  array of filters
-* result_lenght  :  result array lenght
-* filter_lenght  :  filter array lenght
-* result_size    :  result array block lenght
+* result_length  :  result array length
+* filter_length  :  filter array length
+* result_size    :  result array block length
 */
 typedef struct {
         char *filename;
@@ -42,7 +42,7 @@ typedef struct {
         char **result;
         char *separator;
         char **filters;
-        long int result_lenght, filter_lenght, result_size, win_disks_lenght;
+        long int result_length, filter_length, result_size, win_disks_length;
         int linux_multi_disk_search;
 } Folder;   
 
@@ -71,19 +71,19 @@ void init(Folder *folder, const char* filename)
 
                 /* Allocate multiple disk array size */
                 folder->win_disks = malloc(sizeof(char*) * 32);
-                folder->win_disks_lenght = 0;
+                folder->win_disks_length = 0;
 
                 if (dword_result > 0 && dword_result <= MAX_PATH)
                 {
                         char* drive = driver_array;
                         while(*drive)
                         {       
-                                folder->win_disks[folder->win_disks_lenght] = malloc(strlen(drive) + 1);
-                                strcpy(folder->win_disks[folder->win_disks_lenght], drive);
+                                folder->win_disks[folder->win_disks_length] = malloc(strlen(drive) + 1);
+                                strcpy(folder->win_disks[folder->win_disks_length], drive);
 
                                 // Point to the next drive
                                 drive += strlen(drive) + 1;
-                                folder->win_disks_lenght++;
+                                folder->win_disks_length++;
                         }
                 }
 
@@ -109,8 +109,8 @@ void init(Folder *folder, const char* filename)
 
          /* Init sizes */
         folder->result_size = 1024;
-        folder->result_lenght = 0;
-        folder->filter_lenght = 0;
+        folder->result_length = 0;
+        folder->filter_length = 0;
 
         folder->filters = malloc(FILTER_LIMIT * sizeof(char *));
         folder->result = malloc(folder->result_size * sizeof(char *));
@@ -165,7 +165,7 @@ void find_file(Folder *folder)
                                         
                         #endif
 
-                        if(folder->result_lenght == folder->result_size)
+                        if(folder->result_length == folder->result_size)
                         {   
                                 int old_size = folder->result_size;
                                 folder->result_size *= 2;
@@ -180,12 +180,12 @@ void find_file(Folder *folder)
                         if(strstr(ent->d_name, folder->filename) != NULL)
                         {       
                                 /* Set the necessary space for the dir */
-                                folder->result[folder->result_lenght] = malloc(strlen(directory) + strlen(ent->d_name) +1);
+                                folder->result[folder->result_length] = malloc(strlen(directory) + strlen(ent->d_name) +1);
                                 /* Assemble the dir string */
-                                strcpy(folder->result[folder->result_lenght], directory);
-                                strcat(folder->result[folder->result_lenght], ent->d_name);
+                                strcpy(folder->result[folder->result_length], directory);
+                                strcat(folder->result[folder->result_length], ent->d_name);
                                 /* Increase the dir index */
-                                folder->result_lenght++;
+                                folder->result_length++;
                         }
 
                         /* Set current directory */
@@ -208,18 +208,19 @@ Set filter
 #################
 
 * Fill the filter array with user given data
+* return EXIT_SUCCESS if the filter is set
+* return EXIT_FAILURE if the filter array if full 
 */
-void set_filter(Folder *folder, char* new_filter[], int filter_len)
+int add_filter(Folder *folder, char* new_filter)
 {   
-        if(filter_len > FILTER_LIMIT)
-                filter_len = FILTER_LIMIT;
+        if(folder->filter_length >= FILTER_LIMIT)
+                retrun EXIT_FAILURE;
         
-        for(int i = 0; i < filter_len; i++)
-        {       
-                folder->filters[i] = malloc(strlen(new_filter[i]) + 1);
-                strcpy(folder->filters[i], new_filter[i]);
-                folder->filter_lenght++;
-        }
+        folder->filters[folder->filter_length] = malloc(strlen(new_filter) + 1);
+        strcpy(folder->filters[i], new_filter);
+        folder->filter_length++;
+
+        return EXIT_SUCCESS;
 }
 
 /**
@@ -229,19 +230,19 @@ Apply filter
 
 * Fill a given pointer array with filter matching results
 */
-void apply_filter(Folder *folder, char* filtered_result[], int* index)
+int apply_filter(Folder *folder, char* filtered_result[], int index)
 {   
-        for(int i=0; i < folder->result_lenght; i++)
+        for(int i=0; i < folder->result_length; i++)
         {   
-                for(int j=0; j < folder->filter_lenght; j++)
+                for(int j=0; j < folder->filter_length; j++)
                 {
                         /* Check if the result contains the filter */
                         if(strstr(folder->result[i], folder->filters[j]) != NULL)
                         {   
-                                filtered_result[*index] = malloc(strlen(folder->result[i]) +1);
-                                strcpy(filtered_result[*index], folder->result[i]);
+                                filtered_result[index] = malloc(strlen(folder->result[i]) +1);
+                                strcpy(filtered_result[index], folder->result[i]);
                                 
-                                (*index)++;
+                                index++;
                                 break;
                         }
                 }
@@ -309,7 +310,7 @@ int print(Folder* folder)
         /* Check if the array is non empty */
         if(folder->result[0])
                 /* Print array data */
-                for(int i=0; i < folder->result_lenght; i++)
+                for(int i=0; i < folder->result_length; i++)
                         printf("%s\n", folder->result[i]);
         else 
                 /* If the array is empty return an error code */
