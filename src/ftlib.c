@@ -230,6 +230,7 @@ Apply filter
 #################
 
 * Fill a given pointer array with filter matching results
+* Return filtered_result length
 */
 int apply_filter(Folder *folder, char* filtered_result[], int flt_result_index)
 {   
