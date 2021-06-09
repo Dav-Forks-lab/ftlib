@@ -133,7 +133,7 @@ void find_file(Folder *folder)
 {       
         char* directory = malloc(strlen(folder->curr_dir) + 1);
         strcpy(directory, folder->curr_dir);
-
+        
         DIR *dir;
         struct dirent *ent;
 
