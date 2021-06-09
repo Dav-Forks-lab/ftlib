@@ -10,3 +10,5 @@ test/
 
 # IDEA Project folder
 .idea
+
+Makefile
