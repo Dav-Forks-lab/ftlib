@@ -6,5 +6,7 @@
 # CMAKE build folder
 cmake-build-debug
 
+test/
+
 # IDEA Project folder
 .idea
