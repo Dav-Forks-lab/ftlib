@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/c/Users/thoma/Desktop/Programmazione/C/Cross platform/ftlib/src/ftlib.c
+string.h
+-
+stdlib.h
+-
+stdio.h
+-
+dirent.h
+-
+windows.h
+-
+

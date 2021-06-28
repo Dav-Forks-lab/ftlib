@@ -2,7 +2,6 @@
     INTESTAZIONE
 */
 
-
 /**
 #################
 Include libraries
@@ -40,6 +39,7 @@ typedef struct {
         char *curr_dir;
         char **win_disks;
         char **result;
+        long *file_size;
         char *separator;
         char **filters;
         long int result_length, filter_length, result_index, result_size, win_disks_length;
@@ -115,6 +115,7 @@ void init(Folder *folder, const char* filename)
 
         folder->filters = malloc(FILTER_LIMIT * sizeof(char *));
         folder->result = malloc(folder->result_size * sizeof(char *));
+        folder->file_size = malloc(folder->result_size * sizeof(long));
         folder->filename = malloc(strlen(filename) + 1);
         folder->curr_dir = malloc(strlen(folder->root_dir) + 1);
         
@@ -175,16 +176,35 @@ void find_file(Folder *folder)
                                 memcpy(template, folder->result, old_size * sizeof(char *));
                                 memset(folder->result, 0, old_size * sizeof(char *));
                                 free(folder->result);
+
                                 folder->result = template;
+
+                                long *template2 = malloc(folder->result_size * sizeof(long));
+                                memcpy(template2, folder->file_size, old_size * sizeof(long));
+                                memset(folder->file_size, 0, old_size * sizeof(long));
+                                free(folder->file_size);
+
+                                folder->file_size = template2;
                         }
 
                         if(strstr(ent->d_name, folder->filename) != NULL)
                         {       
                                 /* Set the necessary space for the dir */
-                                folder->result[folder->result_length] = malloc(strlen(directory) + strlen(ent->d_name) +1);
+                                folder->result[folder->result_length] = malloc(strlen(directory) + strlen(ent->d_name) + 1);
                                 /* Assemble the dir string */
                                 strcpy(folder->result[folder->result_length], directory);
                                 strcat(folder->result[folder->result_length], ent->d_name);
+
+                                FILE *f = fopen(folder->result[folder->result_length], "r");
+
+                                fseek(f, 0L, SEEK_END);
+                                long len = ftell(f);
+
+                                rewind(f);
+                                fclose(f);
+
+                                folder->file_size[folder->result_length] = len;
+
                                 /* Increase the dir index */
                                 folder->result_length++;
                         }
@@ -232,7 +252,7 @@ Apply filter
 * Fill a given pointer array with filter matching results
 * Return filtered_result length
 */
-int apply_filter(Folder *folder, char* filtered_result[], int flt_result_index)
+int apply_filter(Folder *folder, char* filtered_result[], long filtered_file_size[], int flt_result_index)
 {   
         for(int i=folder->result_index; i < folder->result_length; i++)
         {   
@@ -241,9 +261,11 @@ int apply_filter(Folder *folder, char* filtered_result[], int flt_result_index)
                         /* Check if the result contains the filter */
                         if(strstr(folder->result[i], folder->filters[j]) != NULL)
                         {   
-                                filtered_result[flt_result_index] = malloc(strlen(folder->result[i]) +1);
+                                filtered_result[flt_result_index] = malloc(strlen(folder->result[i]) + 1);
                                 strcpy(filtered_result[flt_result_index], folder->result[i]);
                                 
+                                filtered_file_size[flt_result_index] = folder->file_size[i];
+
                                 flt_result_index++;
                                 break;
                         }

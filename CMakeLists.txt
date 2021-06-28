@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 project(ft_lib)
 
 # Build Shared Library with source files
-add_library(ft SHARED src/ftlib.c src/win_functions.h)
+add_library(ft SHARED src/ftlib.c)
