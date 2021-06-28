@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC   -shared -Wl,-soname,libft.so -o libft.so CMakeFiles/ft.dir/src/ftlib.c.o 

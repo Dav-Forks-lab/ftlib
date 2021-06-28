@@ -1,3 +1,0 @@
-/mnt/c/Users/thoma/Desktop/Programmazione/C/Cross platform/ftlib/CMakeFiles/rebuild_cache.dir
-/mnt/c/Users/thoma/Desktop/Programmazione/C/Cross platform/ftlib/CMakeFiles/edit_cache.dir
-/mnt/c/Users/thoma/Desktop/Programmazione/C/Cross platform/ftlib/CMakeFiles/ft.dir
