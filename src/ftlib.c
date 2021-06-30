@@ -305,6 +305,13 @@ void change_root_directory(Folder* folder, char* new_root_folder)
         strcpy(folder->curr_dir, new_root_folder);
 }
 
+/**
+#################
+Resent root dir
+#################
+
+* Set a new root directory into the struct
+*/
 void resert_directory(Folder* folder)
 {
         #ifdef _WIN32
@@ -322,6 +329,32 @@ void resert_directory(Folder* folder)
                 strcpy(folder->curr_dir, "/");
 
         #endif
+}
+
+/**
+#################
+Clear
+#################
+*/
+void clear(Folder* folder)
+{
+        free(folder->filename);
+        free(folder->curr_dir);
+        free(folder->root_dir);
+        free(folder->file_size);
+        free(folder->separator);
+        
+        for(int i=0; i < folder->result_length; i++)
+                free(folder->result[i]);
+        free(folder->result);
+
+        for(int i=0; i < folder->win_disks_length; i++)
+                free(folder->win_disks[i]);
+        free(folder->win_disks);
+
+        for(int i=0; i < folder->filter_length; i++)
+                free(folder->filters[i]);
+        free(folder->filters);
 }
 
 /**
