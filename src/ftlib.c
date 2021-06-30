@@ -348,9 +348,11 @@ void clear(Folder* folder)
                 free(folder->result[i]);
         free(folder->result);
 
-        for(int i=0; i < folder->win_disks_length; i++)
-                free(folder->win_disks[i]);
-        free(folder->win_disks);
+        #ifdef _WIN32
+                for(int i=0; i < folder->win_disks_length; i++)
+                        free(folder->win_disks[i]);
+                free(folder->win_disks);
+        #endif
 
         for(int i=0; i < folder->filter_length; i++)
                 free(folder->filters[i]);
