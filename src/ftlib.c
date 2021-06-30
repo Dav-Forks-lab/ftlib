@@ -43,7 +43,6 @@ typedef struct {
         char *separator;
         char **filters;
         long int result_length, filter_length, result_index, result_size, win_disks_length;
-        int linux_multi_disk_search;
 } Folder;   
 
 /**
@@ -102,8 +101,6 @@ void init(Folder *folder, const char* filename)
                 strcpy(folder->root_dir, "/");
                 folder->separator = malloc(strlen("/") + 1);
                 strcpy(folder->separator, "/");
-                /* By deault it avoid /dev folder, it search only in the main disk */
-                folder->linux_multi_disk_search = 0;
 
         #endif       
 
@@ -133,8 +130,8 @@ Find file
 void find_file(Folder *folder)
 {       
         char* directory = malloc(strlen(folder->curr_dir) + 1);
-        strcpy(directory, folder->curr_dir);
-        
+        strcpy(directory, folder->curr_dir);        
+
         DIR *dir;
         struct dirent *ent;
 
@@ -156,10 +153,6 @@ void find_file(Folder *folder)
                                    strcmp(ent->d_name, "sys")  == 0   
                                    )
                                         continue;	
-                                
-                                /* If multi_disk_search is disable it avoids to search in other disks */
-                                if(!folder->linux_multi_disk_search && strstr(ent->d_name, "mnt") != NULL)
-                                        continue;
 
                         #elif   _WIN32
                                 if(strchr(ent->d_name, '$') != NULL)
