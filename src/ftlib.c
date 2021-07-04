@@ -7,6 +7,9 @@
 Include libraries
 #################
 */
+
+#include "ftlib.h"
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>      //Used in the print function (printf)
@@ -18,32 +21,6 @@ Include libraries
 
 #define FILTER_LIMIT 32
 
-/**
-#################
-Struct      
-#################
-
-* filename       :  an array with the file to search
-* root_dir       :  the system's root directory
-* curr_dir       :  the current direcoty
-* result         :  array of strings containing the results
-* separator      :  OS's slash
-* filters        :  array of filters
-* result_length  :  result array length
-* filter_length  :  filter array length
-* result_size    :  result array block length
-*/
-typedef struct {
-        char *filename;
-        char *root_dir;
-        char *curr_dir;
-        char **win_disks;
-        char **result;
-        long *file_size;
-        char *separator;
-        char **filters;
-        long int result_length, filter_length, result_index, result_size, win_disks_length;
-} Folder;   
 
 /**
 #################
@@ -105,7 +82,7 @@ void init(Folder *folder, const char* filename)
         #endif       
 
          /* Init sizes */
-        folder->result_size = 1024;
+        folder->result_size = 128;
         folder->result_length = 0;
         folder->filter_length = 0;
         folder->result_index = 0;
@@ -150,7 +127,12 @@ void find_file(Folder *folder)
                                    strcmp(ent->d_name, "proc") == 0 ||
                                    strcmp(ent->d_name, "dev")  == 0 || 
                                    strcmp(ent->d_name, "tmp")  == 0 ||
-                                   strcmp(ent->d_name, "sys")  == 0   
+                                   strcmp(ent->d_name, "sys")  == 0 ||  
+                                   strcmp(ent->d_name, "boot") == 0 ||
+                                   strcmp(ent->d_name, "lib")  == 0 ||
+                                   strcmp(ent->d_name, "opt")  == 0 ||
+                                   strcmp(ent->d_name, "usr")  == 0 ||    
+                                   strcmp(ent->d_name, "Application Data")  == 0
                                    )
                                         continue;	
 
@@ -163,7 +145,7 @@ void find_file(Folder *folder)
                         if(folder->result_length == folder->result_size)
                         {   
                                 int old_size = folder->result_size;
-                                folder->result_size *= 2;
+                                folder->result_size += 128;
                                 
                                 char **template = malloc(folder->result_size * sizeof(char *));
                                 memcpy(template, folder->result, old_size * sizeof(char *));
@@ -189,11 +171,10 @@ void find_file(Folder *folder)
                                 strcat(folder->result[folder->result_length], ent->d_name);
 
                                 FILE *f = fopen(folder->result[folder->result_length], "r");
-
+                                
                                 fseek(f, 0L, SEEK_END);
                                 long len = ftell(f);
 
-                                rewind(f);
                                 fclose(f);
 
                                 folder->file_size[folder->result_length] = len;
@@ -305,7 +286,7 @@ Resent root dir
 
 * Set a new root directory into the struct
 */
-void resert_directory(Folder* folder)
+void reset_directory(Folder* folder)
 {
         #ifdef _WIN32
                 folder->root_dir = realloc(folder->root_dir, strlen("C:\\") +1);
