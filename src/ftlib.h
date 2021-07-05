@@ -14,15 +14,15 @@ Struct
 * result_size    :  result array block length
 */
 typedef struct {
+        long result_length, filter_length, result_index, result_size, win_disks_length;
         char *filename;
         char *root_dir;
         char *curr_dir;
-        char **win_disks;
-        char **result;
         long *file_size;
         char *separator;
+        char **win_disks;
+        char **result;
         char **filters;
-        long int result_length, filter_length, result_index, result_size, win_disks_length;
 } Folder;   
 
 
@@ -32,6 +32,5 @@ extern int     add_filter(Folder*, char*);    /* Add words into filter array */
 extern int     apply_filter(Folder*, char* [], long[], int);    /* Apply filters from filter array */
 extern void    change_filename(Folder*, char*);    /* Change the file to be searched */
 extern void    change_root_directory(Folder*, char*);    /* Change the root directory */
-extern void    reset_directory(Folder*);    /* Reset root directory */
-extern void    clear(Folder*);     /* Reset the struct */
+extern void    reset(Folder*);     /* Reset the struct */
 extern int     print(Folder*);     /* Print data for debugging */

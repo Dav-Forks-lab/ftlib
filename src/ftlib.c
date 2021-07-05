@@ -122,7 +122,7 @@ void find_file(Folder *folder)
                 while((ent = readdir(dir)) != NULL)
                 {       
                         #ifdef __linux__
-                                /* dev/fd folder not needed for the file searching */	
+                                /* Folder not needed for the file searching */ 	
                                 if(strcmp(ent->d_name, "fd")   == 0 ||
                                    strcmp(ent->d_name, "proc") == 0 ||
                                    strcmp(ent->d_name, "dev")  == 0 || 
@@ -135,12 +135,13 @@ void find_file(Folder *folder)
                                    strcmp(ent->d_name, "Application Data")  == 0
                                    )
                                         continue;	
-
+                                        
                         #elif   _WIN32
                                 if(strchr(ent->d_name, '$') != NULL)
                                         continue;
                                         
                         #endif
+                        
 
                         if(folder->result_length == folder->result_size)
                         {   
@@ -188,7 +189,7 @@ void find_file(Folder *folder)
                         strcpy(folder->curr_dir, directory);
                         strcat(folder->curr_dir, ent->d_name);
                         strcat(folder->curr_dir, folder->separator);
-   
+
                         /* Start the search again with recursion */
                         find_file(folder);
                 }
@@ -279,38 +280,13 @@ void change_root_directory(Folder* folder, char* new_root_folder)
         strcpy(folder->curr_dir, new_root_folder);
 }
 
-/**
-#################
-Resent root dir
-#################
-
-* Set a new root directory into the struct
-*/
-void reset_directory(Folder* folder)
-{
-        #ifdef _WIN32
-                folder->root_dir = realloc(folder->root_dir, strlen("C:\\") +1);
-                folder->curr_dir = realloc(folder->curr_dir, strlen("C:\\") +1);
-
-                strcpy(folder->root_dir, "C:\\");
-                strcpy(folder->curr_dir, "C:\\");
-
-        #elif __LINUX__
-                folder->root_dir = realloc(folder->root_dir, strlen("/") +1);
-                folder->curr_dir = realloc(folder->curr_dir, strlen("/") +1);
-
-                strcpy(folder->root_dir, "/");
-                strcpy(folder->curr_dir, "/");
-
-        #endif
-}
 
 /**
 #################
 Clear
 #################
 */
-void clear(Folder* folder)
+void reset(Folder* folder)
 {
         free(folder->filename);
         free(folder->curr_dir);
