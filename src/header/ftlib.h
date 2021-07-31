@@ -42,11 +42,11 @@ typedef struct {
 } Folder;   
 
 
-extern void    init(Folder*, const char*);    /* Initialize struct's data */
-extern void    find_file(Folder*);    /* Search the file in the disk */
-extern int     add_filter(Folder*, char*);    /* Add words into filter array */
-extern int     apply_filter(Folder*, char* [], long[], int);    /* Apply filters from filter array */
-extern void    change_filename(Folder*, char*);    /* Change the file to be searched */
-extern void    change_root_directory(Folder*, char*);    /* Change the root directory */
-extern void    reset(Folder*);     /* Reset the struct */
-extern int     print(Folder*);     /* Print data for debugging */
+extern void    init(Folder* folder, const char* filename);    /* Initialize struct's data */
+extern void    find_file(Folder* folder);    /* Search the file in the disk */
+extern int     add_filter(Folder* folder, char* new_filter);    /* Add words into filter array */
+extern int     apply_filter(Folder* folder, char* filtered_result[], long filtered_file_size[], int flt_result_index);    /* Apply filters from filter array */
+extern void    change_filename(Folder* folder , char* new_filename);    /* Change the file to be searched */
+extern void    change_root_directory(Folder* folder , char* new_root_folder);    /* Change the root directory */
+extern void    reset(Folder* folder);     /* Reset the struct */
+extern int     print(Folder* folder);     /* Print data for debugging */

@@ -10,7 +10,7 @@ Set filter
 * return EXIT_SUCCESS if the filter is set
 * return EXIT_FAILURE if the filter array if full 
 */
-int add_filter(Folder *folder, char* new_filter)
+int add_filter(Folder* folder, char* new_filter)
 {   
         if(folder->filter_length >= FILTER_LIMIT)
                 return EXIT_FAILURE;
@@ -31,7 +31,7 @@ Apply filter
 * Fill a given pointer array with filter matching results
 * Return filtered_result length
 */
-int apply_filter(Folder *folder, char* filtered_result[], long filtered_file_size[], int flt_result_index)
+int apply_filter(Folder* folder, char* filtered_result[], long filtered_file_size[], int flt_result_index)
 {   
         for(int i=folder->result_index; i < folder->result_length; i++)
         {   

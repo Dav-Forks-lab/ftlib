@@ -8,7 +8,7 @@ Init
 
 * Initialize struct's data
 */
-void init(Folder *folder, const char* filename) 
+void init(Folder* folder, const char* filename) 
 {      
         /*
         * If OS is Windows an array is filled with all of the usable drives

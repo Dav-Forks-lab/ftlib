@@ -8,7 +8,7 @@ Find file
 
 * Recursive search through file directories 
 */
-void find_file(Folder *folder)
+void find_file(Folder* folder)
 {       
         char* directory = malloc(strlen(folder->curr_dir) + 1);
         strcpy(directory, folder->curr_dir);        
