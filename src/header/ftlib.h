@@ -1,5 +1,21 @@
 /**
 #################
+Include libraries
+#################
+*/
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>      //Used in the print function (printf)
+#include <dirent.h>
+
+#ifdef  _WIN32
+        #include <windows.h>
+#endif
+
+#define FILTER_LIMIT 32
+
+/**
+#################
 Struct      
 #################
 
