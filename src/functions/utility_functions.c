@@ -15,8 +15,8 @@ int add_filter(Folder* folder, char* new_filter)
         if(folder->filter_length >= FILTER_LIMIT)
                 return EXIT_FAILURE;
         
-        folder->filters[folder->filter_length] = malloc(strlen(new_filter) + 1);
-        strcpy(folder->filters[folder->filter_length], new_filter);
+        folder->filter_array[folder->filter_length] = malloc(strlen(new_filter) + 1);
+        strcpy(folder->filter_array[folder->filter_length], new_filter);
         folder->filter_length++;
 
         return EXIT_SUCCESS;
@@ -38,12 +38,12 @@ int apply_filter(Folder* folder, char* filtered_result[], long filtered_file_siz
                 for(int j=0; j < folder->filter_length; j++)
                 {
                         /* Check if the result contains the filter */
-                        if(strstr(folder->result[i], folder->filters[j]) != NULL)
+                        if(strstr(folder->result_array[i], folder->filter_array[j]) != NULL)
                         {   
-                                filtered_result[flt_result_index] = malloc(strlen(folder->result[i]) + 1);
-                                strcpy(filtered_result[flt_result_index], folder->result[i]);
+                                filtered_result[flt_result_index] = malloc(strlen(folder->result_array[i]) + 1);
+                                strcpy(filtered_result[flt_result_index], folder->result_array[i]);
                                 
-                                filtered_file_size[flt_result_index] = folder->file_size[i];
+                                filtered_file_size[flt_result_index] = folder->file_size_array[i];
 
                                 flt_result_index++;
                                 break;
@@ -97,20 +97,20 @@ void reset(Folder* folder)
         free(folder->filename);
         free(folder->curr_dir);
         free(folder->root_dir);
-        free(folder->file_size);
+        free(folder->file_size_array);
         free(folder->separator);
         
         for(int i=0; i < folder->result_length; i++)
-                free(folder->result[i]);
-        free(folder->result);
+                free(folder->result_array[i]);
+        free(folder->result_array);
 
         #ifdef _WIN32
-                for(int i=0; i < folder->win_disks_length; i++)
-                        free(folder->win_disks[i]);
-                free(folder->win_disks);
+                for(int i=0; i < folder->win_disk_length; i++)
+                        free(folder->win_disk_array[i]);
+                free(folder->win_disk_array);
         #endif
 
         for(int i=0; i < folder->filter_length; i++)
-                free(folder->filters[i]);
-        free(folder->filters);
+                free(folder->filter_array[i]);
+        free(folder->filter_array);
 }

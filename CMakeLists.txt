@@ -14,7 +14,7 @@ add_executable(ft_lib
     src/functions/find_file_functions.c
     src/functions/init_functions.c
     src/functions/utility_functions.c
-    test/win_test.c
+    test/linux_test.c
 )
 
 target_link_libraries (ft_lib ${CMAKE_THREAD_LIBS_INIT})

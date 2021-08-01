@@ -25,20 +25,20 @@ void init(Folder* folder, const char* filename)
                 DWORD dword_result = GetLogicalDriveStrings(dword_size, driver_array);
 
                 /* Allocate multiple disk array size */
-                folder->win_disks = malloc(sizeof(char*) * 32);
-                folder->win_disks_length = 0;
+                folder->win_disk_array= malloc(sizeof(char*) * 32);
+                folder->win_disk_length = 0;
 
                 if (dword_result > 0 && dword_result <= MAX_PATH)
                 {
                         char* drive = driver_array;
                         while(*drive)
                         {       
-                                folder->win_disks[folder->win_disks_length] = malloc(strlen(drive) + 1);
-                                strcpy(folder->win_disks[folder->win_disks_length], drive);
+                                folder->win_disk_array[folder->win_disk_length] = malloc(strlen(drive) + 1);
+                                strcpy(folder->win_disk_array[folder->win_disk_length], drive);
 
                                 // Point to the next drive
                                 drive += strlen(drive) + 1;
-                                folder->win_disks_length++;
+                                folder->win_disk_length++;
                         }
                 }
 
@@ -61,14 +61,14 @@ void init(Folder* folder, const char* filename)
         #endif       
 
          /* Init sizes */
-        folder->result_size = 128;
+        folder->result_fill_index = 128;
         folder->result_length = 0;
         folder->filter_length = 0;
         folder->result_index = 0;
 
-        folder->filters = malloc(FILTER_LIMIT * sizeof(char *));
-        folder->result = malloc(folder->result_size * sizeof(char *));
-        folder->file_size = malloc(folder->result_size * sizeof(long));
+        folder->filter_array = malloc(FILTER_LIMIT * sizeof(char *));
+        folder->result_array = malloc(folder->result_fill_index * sizeof(char *));
+        folder->file_size_array = malloc(folder->result_fill_index * sizeof(long));
         folder->filename = malloc(strlen(filename) + 1);
         folder->curr_dir = malloc(strlen(folder->root_dir) + 1);
         

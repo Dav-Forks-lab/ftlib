@@ -47,42 +47,42 @@ void find_file(Folder* folder)
                         #endif
                         
 
-                        if(folder->result_length == folder->result_size)
+                        if(folder->result_length == folder->result_fill_index)
                         {   
-                                int old_size = folder->result_size;
-                                folder->result_size += 128;
+                                int old_size = folder->result_fill_index;
+                                folder->result_fill_index += 128;
                                 
-                                char **template = malloc(folder->result_size * sizeof(char *));
-                                memcpy(template, folder->result, old_size * sizeof(char *));
-                                memset(folder->result, 0, old_size * sizeof(char *));
-                                free(folder->result);
+                                char **template = malloc(folder->result_fill_index * sizeof(char *));
+                                memcpy(template, folder->result_array, old_size * sizeof(char *));
+                                memset(folder->result_array, 0, old_size * sizeof(char *));
+                                free(folder->result_array);
 
-                                folder->result = template;
+                                folder->result_array = template;
 
-                                long *template2 = malloc(folder->result_size * sizeof(long));
-                                memcpy(template2, folder->file_size, old_size * sizeof(long));
-                                memset(folder->file_size, 0, old_size * sizeof(long));
-                                free(folder->file_size);
+                                long *template2 = malloc(folder->result_fill_index * sizeof(long));
+                                memcpy(template2, folder->file_size_array, old_size * sizeof(long));
+                                memset(folder->file_size_array, 0, old_size * sizeof(long));
+                                free(folder->file_size_array);
 
-                                folder->file_size = template2;
+                                folder->file_size_array = template2;
                         }
 
                         if(strstr(ent->d_name, folder->filename) != NULL)
                         {       
                                 /* Set the necessary space for the dir */
-                                folder->result[folder->result_length] = malloc(strlen(directory) + strlen(ent->d_name) + 1);
+                                folder->result_array[folder->result_length] = malloc(strlen(directory) + strlen(ent->d_name) + 1);
                                 /* Assemble the dir string */
-                                strcpy(folder->result[folder->result_length], directory);
-                                strcat(folder->result[folder->result_length], ent->d_name);
+                                strcpy(folder->result_array[folder->result_length], directory);
+                                strcat(folder->result_array[folder->result_length], ent->d_name);
 
-                                FILE *f = fopen(folder->result[folder->result_length], "r");
+                                FILE *f = fopen(folder->result_array[folder->result_length], "r");
                                 
                                 fseek(f, 0L, SEEK_END);
                                 long len = ftell(f);
 
                                 fclose(f);
 
-                                folder->file_size[folder->result_length] = len;
+                                folder->file_size_array[folder->result_length] = len;
 
                                 /* Increase the dir index */
                                 folder->result_length++;
