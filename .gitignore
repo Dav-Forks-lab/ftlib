@@ -2,11 +2,15 @@
 *.exe
 *.o
 *.so
+*.sln
+*.vcxproj
+*.vcxproj.filters
 
 # CMAKE build folder
 cmake-build-debug
-cMakeCache.test
+CMakeCache.txt
 cmake_install.cmake
+
 
 # IDEA Project folder
 .idea
@@ -15,3 +19,4 @@ Makefile
 CMakeFiles/
 
 ft_lib
+ft_cli
