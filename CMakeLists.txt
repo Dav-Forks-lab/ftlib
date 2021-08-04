@@ -17,4 +17,7 @@ add_executable(ft_lib
     test/linux_test.c
 )
 
+
+add_definitions(-Wall -Os)
+
 target_link_libraries (ft_lib ${CMAKE_THREAD_LIBS_INIT})
