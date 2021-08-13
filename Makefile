@@ -1,7 +1,7 @@
 # Compiler settings
 CC = gcc
-CFLAGS = -Wall -Os -g
-TFLAG = -lpthread
+CFLAGS = -Wall -g
+TFLAGS = -lpthread
 
 
 # Folders
@@ -29,11 +29,14 @@ SRCS := $(wildcard $(FUNC)/*.c $(HEADERS))
 OBJS := $(addprefix $(BUILD)/, $(notdir $(SRCS:.c=.o)))
 
 all: $(LIBFILE)
+.PHONY: test
 
 # Create lib file
 $(LIBFILE): $(OBJS)
-	$(CC) -shared -fPIC $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -shared -o $@ $^
 
+
+# Create object files
 $(OBJS): $(SRCS)
 	$(CC) -c $(CFLAGS) $^
 ifeq ($(OS), Windows_NT)
@@ -43,9 +46,9 @@ else
 endif
 
 
-#Create test files
-test: $(TESTFILE) $(OBJS)
-	$(CC) $(CFLAGS) -o $(TESTEXE) $? -L$(LIB) -lftlib $(TFLAG)
+#Create test file
+test: $(TESTFILE)
+	$(CC) $(CFLAGS) -o $(TESTEXE) $? $(LIB)/libftlib.so $(TFLAGS)
 
 
 # Clear folders
