@@ -15,7 +15,9 @@ cmake_install.cmake
 # IDEA Project folder
 .idea
 
-Makefile
+lib/
+build/
+bin/
 CMakeFiles/
 
 ft_lib
