@@ -17,7 +17,7 @@ TEST = test
 ifeq ($(OS), Windows_NT)
 	TESTFILE = $(TEST)/win_test.c
 	TESTEXE = $(BIN)/test.exe
-	LIBFILE = $(LIB)/libftlib.dll
+	LIBFILE = $(LIB)\libftlib.dll
 else
 	TESTFILE = $(TEST)/linux_test.c
 	TESTEXE = $(BIN)/test
@@ -48,7 +48,7 @@ endif
 
 #Create test file
 test: $(TESTFILE)
-	$(CC) $(CFLAGS) -o $(TESTEXE) $? $(LIB)/libftlib.so $(TFLAGS)
+	$(CC) $(CFLAGS) -o $(TESTEXE) $? $(LIBFILE) $(TFLAGS)
 
 
 # Clear folders
