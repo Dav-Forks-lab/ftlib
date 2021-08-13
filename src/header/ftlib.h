@@ -1,5 +1,5 @@
-#ifndef FTLIB_HEADER
-#define FTLIB_HEADER
+#ifndef FTLIB_H_
+#define FTLIB_H_
 
 /**
 #################
