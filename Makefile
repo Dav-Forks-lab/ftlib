@@ -27,7 +27,6 @@ endif
 HEADERS := $(HEAD)/*.h
 SRCS := $(wildcard $(FUNC)/*.c $(HEADERS))
 OBJS := $(addprefix $(BUILD)/, $(notdir $(SRCS:.c=.o)))
-TESTOBJ := $(addprefix $(BUILD)/, $(notdir $(TESTFILE:.c=.o)))
 
 all: $(LIBFILE)
 
@@ -45,11 +44,8 @@ endif
 
 
 #Create test files
-test: $(OBJS) $(TESTOBJ)
+test: $(TESTFILE) $(OBJS)
 	$(CC) $(CFLAGS) -o $(TESTEXE) $? -L$(LIB) -lftlib $(TFLAG)
-
-$(TESTOBJ): $(TESTFILE)
-	$(CC) -c $(CFLAGS) -o $@ $< $(TFLAG)
 
 
 # Clear folders
