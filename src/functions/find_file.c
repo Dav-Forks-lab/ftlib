@@ -60,11 +60,11 @@ void find_file(Folder* folder)
                                 folder->result_array = template;
 
                                 long *template2 = malloc(folder->result_fill_index * sizeof(long));
-                                memcpy(template2, folder->file_size_array, old_size * sizeof(long));
-                                memset(folder->file_size_array, 0, old_size * sizeof(long));
-                                free(folder->file_size_array);
+                                memcpy(template2, folder->size_array, old_size * sizeof(long));
+                                memset(folder->size_array, 0, old_size * sizeof(long));
+                                free(folder->size_array);
 
-                                folder->file_size_array = template2;
+                                folder->size_array = template2;
                         }
 
                         if(strstr(ent->d_name, folder->filename) != NULL)
@@ -82,7 +82,7 @@ void find_file(Folder* folder)
 
                                 fclose(f);
 
-                                folder->file_size_array[folder->result_length] = len;
+                                folder->size_array[folder->result_length] = len;
 
                                 /* Increase the dir index */
                                 folder->result_length++;

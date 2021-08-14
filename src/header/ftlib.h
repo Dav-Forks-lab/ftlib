@@ -36,7 +36,7 @@ Struct
 * separator            :    String path separator, OS dependet
 
 ## long array parameters ##
-* file_size_array      :    Array containing files sizes
+* size_array      :    Array containing files sizes
 
 ## string array type parameters ##
 * win_disk_array       :    Array containing the windows disk letters
@@ -50,7 +50,7 @@ typedef struct {
         char* root_dir;
         char* curr_dir;
         char* separator;
-        long* file_size_array;
+        long* size_array;
         char** win_disk_array;
         char** result_array;
         char** filter_array;
@@ -65,7 +65,7 @@ Struct functions
 extern void    init(Folder* folder, const char* filename);    /* Initialize struct's data */
 extern void    find_file(Folder* folder);    /* Search the file in the disk */
 extern int     add_filter(Folder* folder, char* new_filter);    /* Add words into filter array */
-extern int     apply_filter(Folder* folder, char* filtered_result[], long filtered_file_size[], int flt_result_index);    /* Apply filters from filter array */
+extern int     apply_filter(Folder* folder, char* flt_result_array[], long flt_size_array[], int flt_index);    /* Apply filters from filter array */
 extern void    change_filename(Folder* folder , char* new_filename);    /* Change the filename */
 extern void    change_root_directory(Folder* folder , char* new_root_folder);    /* Change the root directory */
 extern void    reset(Folder* folder);     /* Reset the struct to init data */

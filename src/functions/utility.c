@@ -29,9 +29,9 @@ Apply filter
 #################
 
 * Fill a given pointer array with filter matching results
-* Return filtered_result length
+* Return flt_result_array length
 */
-int apply_filter(Folder* folder, char* filtered_result[], long filtered_file_size[], int flt_result_index)
+int apply_filter(Folder* folder, char* flt_result_array[], long flt_size_array[], int flt_index)
 {   
         for(int i=folder->result_index; i < folder->result_length; i++)
         {   
@@ -40,19 +40,19 @@ int apply_filter(Folder* folder, char* filtered_result[], long filtered_file_siz
                         /* Check if the result contains the filter */
                         if(strstr(folder->result_array[i], folder->filter_array[j]) != NULL)
                         {   
-                                filtered_result[flt_result_index] = malloc(strlen(folder->result_array[i]) + 1);
-                                strcpy(filtered_result[flt_result_index], folder->result_array[i]);
+                                flt_result_array[flt_index] = malloc(strlen(folder->result_array[i]) + 1);
+                                strcpy(flt_result_array[flt_index], folder->result_array[i]);
                                 
-                                filtered_file_size[flt_result_index] = folder->file_size_array[i];
+                                flt_size_array[flt_index] = folder->size_array[i];
 
-                                flt_result_index++;
+                                flt_index++;
                                 break;
                         }
                 }
         }
         folder->result_index = folder->result_length;
 
-        return flt_result_index;
+        return flt_index;
 }
 
 
@@ -97,7 +97,7 @@ void reset(Folder* folder)
         free(folder->filename);
         free(folder->curr_dir);
         free(folder->root_dir);
-        free(folder->file_size_array);
+        free(folder->size_array);
         free(folder->separator);
         
         for(int i=0; i < folder->result_length; i++)
