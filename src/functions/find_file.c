@@ -35,7 +35,8 @@ void find_file(Folder* folder)
                                    strcmp(ent->d_name, "boot") == 0 ||
                                    strcmp(ent->d_name, "lib")  == 0 ||
                                    strcmp(ent->d_name, "opt")  == 0 ||
-                                   strcmp(ent->d_name, "usr")  == 0 ||    
+                                   strcmp(ent->d_name, "usr")  == 0 ||   
+                                   strcmp(ent->d_name, "X11")  == 0 ||    
                                    strcmp(ent->d_name, "Application Data")  == 0
                                    )
                                         continue;	
