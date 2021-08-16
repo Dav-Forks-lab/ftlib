@@ -30,7 +30,7 @@ void print_data(Folder* folder)
                 {       
                         for(int i=old; i < folder->result_length; i++)
                         {
-                            printf("\n--> %s %ld", folder->result_array[i], folder->file_size_array[i]);
+                            printf("\n--> %s %ld", folder->result_array[i], folder->size_array[i]);
                         }
                         old = folder->result_length;
                 }
