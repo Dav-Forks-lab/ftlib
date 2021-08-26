@@ -12,7 +12,7 @@ Include libraries
 #include <dirent.h>
 
 #ifdef  _WIN32
-        #include <windows.h>
+	#include <windows.h>
 #endif
 
 #define FILTER_LIMIT 32
@@ -45,15 +45,15 @@ Struct
 
 */
 typedef struct {
-        long filter_length, result_length, result_index, result_fill_index, win_disk_length;
-        char* filename;
-        char* root_dir;
-        char* curr_dir;
-        char* separator;
-        long* size_array;
-        char** win_disk_array;
-        char** result_array;
-        char** filter_array;
+	long filter_length, result_length, result_index, result_fill_index, win_disk_length;
+	char* filename;
+	char* root_dir;
+	char* curr_dir;
+	char* separator;
+	long* size_array;
+	char** win_disk_array;
+	char** result_array;
+	char** filter_array;
 } Folder;   
 
 

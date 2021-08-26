@@ -19,52 +19,52 @@ int print_data_on = 1;
 
 void print_data(Folder* folder)
 {
-        puts("Thread 2 started");
-        long int old = 0;
+	puts("Thread 2 started");
+	long int old = 0;
 
-        while(folder->result_index != folder->result_length || print_data_on)
-        {       
-                if(old != 0 && strcmp(folder->curr_dir, "/") == 0)
-                        continue;
-                if(old != folder->result_length)
-                {       
-                        for(int i=old; i < folder->result_length; i++)
-                        {
-                            printf("\n--> %s %ld", folder->result_array[i], folder->size_array[i]);
-                        }
-                        old = folder->result_length;
-                }
-        }
+	while(folder->result_index != folder->result_length || print_data_on)
+	{       
+		if(old != 0 && strcmp(folder->curr_dir, "/") == 0)
+			continue;
+		if(old != folder->result_length)
+		{       
+			for(int i=old; i < folder->result_length; i++)
+			{
+			    printf("\n--> %s %ld", folder->result_array[i], folder->size_array[i]);
+			}
+			old = folder->result_length;
+		}
+	}
 }
 
 int main()
 {
-        Folder *f = malloc(sizeof(Folder));
-        pthread_t thread1, thread2;
-        char* fName = malloc(1024);
+	Folder *f = malloc(sizeof(Folder));
+	pthread_t thread1, thread2;
+	char* fName = malloc(1024);
 
-        printf("\nInserisci il nome del file: ");
-        scanf("%s", fName);
+	printf("\nInserisci il nome del file: ");
+	scanf("%s", fName);
 
-        init(f, fName);
+	init(f, fName);
 
-        pthread_create(&thread2, NULL, (void*)print_data, (void*)f);
+	pthread_create(&thread2, NULL, (void*)print_data, (void*)f);
     
-        pthread_create(&thread1, NULL, (void*)find_file, (void*)f);    
+	pthread_create(&thread1, NULL, (void*)find_file, (void*)f);    
 
-        pthread_join(thread1, NULL);
+	pthread_join(thread1, NULL);
 
-        print_data_on = 0;
+	print_data_on = 0;
 
-        pthread_join(thread2, NULL);
+	pthread_join(thread2, NULL);
 
-        puts("\nFINISHED\n");
+	puts("\nFINISHED\n");
 
-        //print(f);
+	//print(f);
 
-        reset(f);
-        free(f);
+	reset(f);
+	free(f);
 
 
-        return EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }
