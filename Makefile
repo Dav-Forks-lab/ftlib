@@ -23,8 +23,8 @@ else
 	LIBFILE = $(BIN)/libftlib.so
 endif
 
-HEADERS := $(HEAD)/*.h
-SRCS := $(wildcard $(FUNC)/*.c $(HEADERS))
+HEADOBJ = $(BUILD)/.o
+SRCS := $(wildcard $(FUNC)/*.c $(HEADOBJ))
 OBJS := $(addprefix $(BUILD)/, $(notdir $(SRCS:.c=.o)))
 
 
@@ -36,6 +36,8 @@ all: $(LIBFILE)
 $(LIBFILE): $(OBJS)
 	$(CC) $(CFLAGS) -shared -o $@ $^
 
+$(HEADOBJ): $(HEAD)/*.c $(HEAD)/*.h
+	$(CC) $(CFLAGS) -shared -o $@ $<
 
 # Create object files
 $(OBJS): $(SRCS)

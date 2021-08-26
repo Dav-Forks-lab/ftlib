@@ -1,3 +1,4 @@
+#include "../header/struct.c"
 #include "../header/ftlib.h"
 
 
@@ -113,4 +114,18 @@ void reset(Folder* folder)
 	for(int i=0; i < folder->filter_length; i++)
 		free(folder->filter_array[i]);
 	free(folder->filter_array);
+}
+
+
+/**
+#################
+Print (debug)
+#################
+*/
+void print(Folder* folder)
+{
+	for(int i=0; i < folder->result_length; i++)
+	{
+		printf("%s --- %ld\n", folder->result_array[i], folder->size_array[i]);
+	}
 }

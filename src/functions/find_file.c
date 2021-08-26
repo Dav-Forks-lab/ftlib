@@ -1,3 +1,4 @@
+#include "../header/struct.c"
 #include "../header/ftlib.h"
 
 

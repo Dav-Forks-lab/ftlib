@@ -1,3 +1,4 @@
+#include "../header/struct.c"
 #include "../header/ftlib.h"
 
 
@@ -8,8 +9,10 @@ Init
 
 * Initialize struct's data
 */
-void init(Folder* folder, const char* filename) 
+Folder* init(const char* filename) 
 {      
+	Folder* folder = malloc(sizeof(Folder));
+
 	/*
 	* If OS is Windows an array is filled with all of the usable drives
 	* The find_file function doesn't search in all of those automatically
@@ -74,4 +77,6 @@ void init(Folder* folder, const char* filename)
 	
 	strcpy(folder->filename, filename);    
 	strcpy(folder->curr_dir, folder->root_dir);
+
+	return folder;
 }
