@@ -64,9 +64,13 @@ Change filename
 
 * Set a new filename into the struct
 */
-void change_filename(Folder* folder, char* new_filename)
+void set_filename(Folder* folder, char* new_filename)
 {
-	folder->filename = realloc(folder->filename, strlen(new_filename) + 1);
+	if(folder->filename != NULL)
+		free(folder->filename);
+	
+	/* Allocate new memeory */
+	folder->filename = malloc(sizeof(strlen(new_filename) + 1));
 	strcpy(folder->filename, new_filename);
 }
 
@@ -76,9 +80,9 @@ void change_filename(Folder* folder, char* new_filename)
 Change root dir
 #################
 
-* Set a new root directory into the struct
+* Set another root dir, different from the stock one
 */
-void change_root_directory(Folder* folder, char* new_root_folder)               
+void set_root_directory(Folder* folder, char* new_root_folder)               
 {
 	folder->root_dir = realloc(folder->root_dir, strlen(new_root_folder) +1);
 	folder->curr_dir = realloc(folder->curr_dir, strlen(new_root_folder) +1);

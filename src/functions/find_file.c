@@ -48,7 +48,7 @@ void find_file(Folder* folder)
 					
 			#endif
 			
-
+			/* Extend the result array by 128 character slot */
 			if(folder->result_length == folder->result_fill_index)
 			{   
 				int old_size = folder->result_fill_index;
@@ -69,6 +69,7 @@ void find_file(Folder* folder)
 				folder->size_array = template2;
 			}
 
+			/* The word is found and stored in the result array */
 			if(strstr(ent->d_name, folder->filename) != NULL)
 			{       
 				/* Set the necessary space for the dir */
@@ -90,7 +91,7 @@ void find_file(Folder* folder)
 				folder->result_length++;
 			}
 
-			/* Set current directory */
+			/* Set current directory for the next recursive iteration */
 			folder->curr_dir = realloc(folder->curr_dir, strlen(directory) + strlen(ent->d_name) + strlen(folder->separator) + 2);
 			strcpy(folder->curr_dir, directory);
 			strcat(folder->curr_dir, ent->d_name);
@@ -99,6 +100,7 @@ void find_file(Folder* folder)
 			/* Start the search again with recursion */
 			find_file(folder);
 		}
+		/* Close the opened directory */
 		closedir(dir);
 	}
 }

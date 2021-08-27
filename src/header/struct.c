@@ -26,7 +26,6 @@ Struct
 * win_disk_array       :    Array containing the windows disk letters
 * result_array         :    Array containing the result filenames
 * filter_array         :    Array containing the filters
-
 */
 typedef struct _folder {
 	long filter_length, result_length, result_index, result_fill_index, win_disk_length;

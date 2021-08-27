@@ -48,18 +48,15 @@ int main()
 	char* fName = malloc(1024);
 	char* filter = malloc(1024);
 
+	Folder* f = init();
+
 	printf("\nInserisci il nome del file: ");
 	scanf("%s", fName);
 
-	Folder* f = init(fName);
-
-	printf("\nInserisci il filtro: ");
-	scanf("%s", filter);
-
-	
-	add_filter(f, filter);
+	set_filename(f, fName);
 
 	clock_t start = clock();
+	puts("Clock started");
 
 	//pthread_create(&thread2, NULL, (void*)print_data, (void*)f);
 

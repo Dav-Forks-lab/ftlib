@@ -9,7 +9,7 @@ Init
 
 * Initialize struct's data
 */
-Folder* init(const char* filename) 
+Folder* init() 
 {      
 	Folder* folder = malloc(sizeof(Folder));
 
@@ -72,10 +72,9 @@ Folder* init(const char* filename)
 	folder->filter_array = malloc(FILTER_LIMIT * sizeof(char *));
 	folder->result_array = malloc(folder->result_fill_index * sizeof(char *));
 	folder->size_array = malloc(folder->result_fill_index * sizeof(long));
-	folder->filename = malloc(strlen(filename) + 1);
 	folder->curr_dir = malloc(strlen(folder->root_dir) + 1);
+	folder->filename = NULL;
 	
-	strcpy(folder->filename, filename);    
 	strcpy(folder->curr_dir, folder->root_dir);
 
 	return folder;
