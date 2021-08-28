@@ -9,7 +9,7 @@ Find file
 
 * Recursive search through file directories 
 */
-void find_file(Folder* folder)
+void search(Folder* folder)
 {       
 	char* directory = malloc(strlen(folder->curr_dir) + 1);
 	strcpy(directory, folder->curr_dir);        
@@ -70,14 +70,13 @@ void find_file(Folder* folder)
 			}
 
 			/* The word is found and stored in the result array */
-			if(strstr(ent->d_name, folder->filename) != NULL)
+			if(strstr(lowercase(ent->d_name), folder->filename) != NULL)
 			{       
 				/* Set the necessary space for the dir */
 				folder->result_array[folder->result_length] = malloc(strlen(directory) + strlen(ent->d_name) + 1);
 				/* Assemble the dir string */
 				strcpy(folder->result_array[folder->result_length], directory);
 				strcat(folder->result_array[folder->result_length], ent->d_name);
-
 				FILE *f = fopen(folder->result_array[folder->result_length], "r");
 				
 				fseek(f, 0L, SEEK_END);
@@ -98,7 +97,7 @@ void find_file(Folder* folder)
 			strcat(folder->curr_dir, folder->separator);
 
 			/* Start the search again with recursion */
-			find_file(folder);
+			search(folder);
 		}
 		/* Close the opened directory */
 		closedir(dir);

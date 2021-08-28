@@ -32,7 +32,7 @@ Apply filter
 * Fill a given pointer array with filter matching results
 * Return flt_result_array length
 */
-int apply_filter(Folder* folder, char* flt_result_array[], long flt_size_array[], int flt_index)
+int app_filter(Folder* folder, char* flt_result_array[], long flt_size_array[], int flt_index)
 {   
 	for(int i=folder->result_index; i < folder->result_length; i++)
 	{   
@@ -71,7 +71,7 @@ void set_filename(Folder* folder, char* new_filename)
 	
 	/* Allocate new memeory */
 	folder->filename = malloc(sizeof(strlen(new_filename) + 1));
-	strcpy(folder->filename, new_filename);
+	strcpy(folder->filename, lowercase(new_filename));
 }
 
 
@@ -94,7 +94,24 @@ void set_root_directory(Folder* folder, char* new_root_folder)
 
 /**
 #################
-Clear
+lowercase
+#################
+*/
+char* lowercase(char* string)
+{
+	size_t s_len = strlen(string);
+	char* tmp = malloc(sizeof(char) * (s_len + 1));
+
+	for(size_t i=0; i < s_len; i++)
+		tmp[i] = (string[i] > 64 && string[i] < 91) ? string[i] ^ 0x20 : string[i];
+
+	return tmp;
+}
+
+
+/**
+#################
+Reset
 #################
 */
 void reset(Folder* folder)

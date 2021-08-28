@@ -63,7 +63,7 @@ int main()
 	//for(int i=0; i < f->win_disk_length; i++)
 	//{       
 		//change_root_directory(f, f->win_disk_array[i]);
-		pthread_create(&thread1, NULL, (void*)find_file, (void*)f);
+		pthread_create(&thread1, NULL, (void*)search, (void*)f);
 		pthread_join(thread1, NULL);
 	//}
 	print_data_on = 0;
@@ -74,7 +74,7 @@ int main()
 	
 	puts("\n");
 	
-	printf("Time %f", (double)(end - start) / CLOCKS_PER_SEC);
+	printf("Time %f\n", (double)(end - start) / CLOCKS_PER_SEC);
 
 	print(f);
 

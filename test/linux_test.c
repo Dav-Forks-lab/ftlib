@@ -16,7 +16,7 @@ Find file
 */
 
 int print_data_on = 1;
-
+/*
 void print_data(Folder* folder)
 {
 	puts("Thread 2 started");
@@ -36,31 +36,36 @@ void print_data(Folder* folder)
 		}
 	}
 }
-
+*/
 int main()
 {
-	Folder *f = malloc(sizeof(Folder));
 	pthread_t thread1, thread2;
 	char* fName = malloc(1024);
+	char* filter = malloc(1024);
+
+	Folder* f = init();
 
 	printf("\nInserisci il nome del file: ");
 	scanf("%s", fName);
 
-	init(f, fName);
+	set_filename(f, fName);
 
-	pthread_create(&thread2, NULL, (void*)print_data, (void*)f);
-    
-	pthread_create(&thread1, NULL, (void*)find_file, (void*)f);    
+	clock_t start = clock();
+	puts("Clock started");
 
+	pthread_create(&thread1, NULL, (void*)search, (void*)f);
 	pthread_join(thread1, NULL);
-
+	
 	print_data_on = 0;
+	
+	clock_t end = clock();
+	
+	puts("\n");
+	
+	printf("Time %f\n", (double)(end - start) / CLOCKS_PER_SEC);
 
-	pthread_join(thread2, NULL);
+	print(f);
 
-	puts("\nFINISHED\n");
-
-	//print(f);
 
 	reset(f);
 	free(f);
