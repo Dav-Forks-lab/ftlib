@@ -27,13 +27,15 @@ HEADOBJ = $(BUILD)/.o
 SRCS := $(wildcard $(FUNC)/*.c $(HEADOBJ))
 OBJS := $(addprefix $(BUILD)/, $(notdir $(SRCS:.c=.o)))
 
-
 all: $(LIBFILE)
 .PHONY: test
 
 
 # Create lib file
 $(LIBFILE): $(OBJS)
+ifeq ("$(wildcard $(BIN))", "")
+	mkdir $(BIN)
+endif
 	$(CC) $(CFLAGS) -shared -o $@ $^
 
 $(HEADOBJ): $(HEAD)/*.c $(HEAD)/*.h
@@ -42,6 +44,9 @@ $(HEADOBJ): $(HEAD)/*.c $(HEAD)/*.h
 # Create object files
 $(OBJS): $(SRCS)
 	$(CC) -c $(CFLAGS) $^
+ifeq ("$(wildcard $(BUILD))", "")
+	mkdir $(BUILD)
+endif
 ifeq ($(OS), Windows_NT)
 	move *.o $(BUILD)
 else
