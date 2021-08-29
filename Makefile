@@ -48,7 +48,7 @@ ifeq ("$(wildcard $(BUILD))", "")
 	mkdir $(BUILD)
 endif
 ifeq ($(OS), Windows_NT)
-	move *.o $(BUILD)
+	move /Y *.o $(BUILD)
 else
 	mv *.o $(BUILD)
 endif
