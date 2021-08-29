@@ -5,6 +5,7 @@
 *.sln
 *.vcxproj
 *.vcxproj.filters
+*.dll
 
 # CMAKE build folder
 cmake-build-debug
@@ -15,9 +16,6 @@ cmake_install.cmake
 # IDEA Project folder
 .idea
 
-lib/
-build/
-bin/
 CMakeFiles/
 
 ft_lib
