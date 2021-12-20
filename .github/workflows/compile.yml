@@ -1,7 +1,9 @@
 name: C/C++ CI
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   linux_build:
