@@ -16,14 +16,3 @@ jobs:
     - name: compile
       run: make 
   
-  windows_build:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up GCC
-      uses: egor-tensin/setup-mingw@v2
-      with:
-        version: latest
-        platform: x64
-    - name: compile
-      run: make 

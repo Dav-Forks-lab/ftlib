@@ -21,7 +21,7 @@ OBJS := $(OBJS:.cpp=.o)
 LIBA = libftlib.a
 
 # Compile
-all: dircheck test
+all: dircheck $(LIBA)
 
 
 %.o: %.c
