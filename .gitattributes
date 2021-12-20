@@ -2,3 +2,5 @@
 # Add any extra files or paths here to make git stop saying they
 # are changed when only line endings change.
 src/main/resources/assets/metallurgy/recipes/**/*.json text eol=lf
+
+src/include/json.hpp linguist-vendored
