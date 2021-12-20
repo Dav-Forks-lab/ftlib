@@ -1,4 +1,5 @@
 [![License](https://img.shields.io/github/license/Zambo-dev/big-number-toolbox-library?style=flat-square)](./LICENSE)
+[![Build](https://github.com/Zambo-dev/ftlib/actions/workflows/compile.yml/badge.svg)](https://github.com/Zambo-dev/ftlib/actions/workflows/compile.yml)
 
 # ftlib
 
