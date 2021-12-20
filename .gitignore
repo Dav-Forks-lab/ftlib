@@ -5,6 +5,7 @@
 *.sln
 *.vcxproj
 *.vcxproj.filters
+*.puml
 
 # CMAKE build folder
 cmake-build-debug
@@ -19,6 +20,7 @@ lib/
 build/
 bin/
 CMakeFiles/
+main/
 
 ft_lib
 ft_cli

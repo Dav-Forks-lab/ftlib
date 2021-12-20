@@ -1,77 +1,54 @@
-# Compiler settings
-CC = gcc
-CFLAGS = -Wall -Os -g
-TFLAGS = -lpthread
+# Compiler
+CC = g++
+CFLAGS = -Wall -g
 
 
 # Folders
-FUNC = src/functions
-HEAD = src/head
-BUILD = build
+SRC = src
+FTL = $(SRC)/ftl
+FTLF = $(FTL)/ftl_functions
+INC = $(SRC)/include
+JSONF = $(SRC)/json_functions
+OSF = $(SRC)/os_functions
 BIN = bin
-TEST = test
+BUILD = build
+LIB = lib
+
+# Files
+SRCS := $(wildcard $(FTLF)/*.c $(OSF)/*.c $(JSONF)/*.cpp)
+OBJS := $(SRCS:.c=.o)
+OBJS := $(OBJS:.cpp=.o)
+LIBA = libftlib.a
+
+# Compile
+all: dircheck test
 
 
-# Lib files
-ifeq ($(OS), Windows_NT)
-	TESTFILE = $(TEST)/win_test.c
-	TESTEXE = $(BIN)/test
-	LIBFILE = $(BIN)\libftlib.dll
-else
-	TESTFILE = $(TEST)/linux_test.c
-	TESTEXE = $(BIN)/test
-	LIBFILE = $(BIN)/libftlib.so
-endif
-
-HEADOBJ = $(BUILD)/.o
-SRCS := $(wildcard $(FUNC)/*.c $(HEADOBJ))
-OBJS := $(addprefix $(BUILD)/, $(notdir $(SRCS:.c=.o)))
-
-all: $(LIBFILE)
-.PHONY: test
-
-
-# Create lib file
-$(LIBFILE): $(OBJS)
-ifeq ("$(wildcard $(BIN))", "")
-	mkdir $(BIN)
-endif
-	$(CC) $(CFLAGS) -shared -o $@ $^
-
-$(HEADOBJ): $(HEAD)/*.c $(HEAD)/*.h
-	$(CC) $(CFLAGS) -shared -o $@ $<
-
-# Create object files
-$(OBJS): $(SRCS)
+%.o: %.c
 	$(CC) -c $(CFLAGS) $^
+	mv *.o build/
+
+$(LIBA): $(OBJS)
+	echo $^
+	ar cr $@ build/*.o
+	mv $@ lib/
+
+test: $(LIBA)
+	$(CC) $(CFLAGS) main/linux_test.cpp -I $(INC) -lftlib -L $(LIB) -o $(BIN)/test
+
+dircheck:
+ifeq ("$(wildcard $(BIN))", "")
+	@echo -n 'Creating bin/ folder -> '
+	@ mkdir $(BIN)
+	@echo done
+endif
 ifeq ("$(wildcard $(BUILD))", "")
-	mkdir $(BUILD)
+	@echo -n 'Creating build/ folder -> '
+	@ mkdir $(BUILD)
+	@echo done
 endif
-ifeq ($(OS), Windows_NT)
-	move /Y *.o $(BUILD)
-else
-	mv *.o $(BUILD)
-endif
-
-
-#Create test file
-test: $(TESTFILE) $(LIBFILE)
-	$(CC) $(CFLAGS) -o $(TESTEXE) $? $(TFLAGS)
-
-
-# Clear folders
-clean:
-ifeq ($(OS), Windows_NT)
-	del /q /f $(BIN)\*.* $(BUILD)\*.* $(LIB)\*.*
-else
-	rm $(BIN)/* $(BUILD)/* $(LIB)/*
-endif
-
-
-# Clear bin folder
-tclean:
-ifeq ($(OS), Windows_NT)
-	del /q /f $(BIN)\*.*
-else
-	rm $(BIN)/* $(BUILD)/*
+ifeq ("$(wildcard $(LIB))", "")
+	@echo -n 'Creating lib/ folder -> '
+	@ mkdir $(LIB)
+	@echo done
 endif
